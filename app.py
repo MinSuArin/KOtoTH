@@ -8,6 +8,8 @@ from linebot.models import MessageEvent, TextMessage, TextSendMessage
 
 from flask import Flask, jsonify, request, abort
 
+import os
+
 app = Flask(__name__)
 
 channel_secret = 'b67316df3e87f829070222d53b9af01f'
@@ -79,17 +81,18 @@ def callback():
 
     return 'OK'
 
-## For Kakao
-#@app.route('/message', methods=['POST'])
-#def message():
-#    data = request.json
-#    translated = translate(data['content'])
-#    return jsonify({"message": {"text": translated}})
+# For Kakao
+@app.route('/message', methods=['POST'])
+def message():
+    data = request.json
+    translated = translate(data['content'])
+    return jsonify({"message": {"text": translated}})
 
 @app.route('/keyboard')
 def keyboard():
     return jsonify({'type': 'text'})
 
 if __name__ == "__main__":
-
-    app.run(debug=False, port=8000)
+    #app.run()#debug=False, port=8080)
+    port = int(os.getenv("PORT"))
+    app.run(host="0.0.0.0", port=port)
